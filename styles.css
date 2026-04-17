@@ -191,24 +191,28 @@ body.producto {
 
 .product-page {
   display: flex;
-  gap: 50px;
+  gap: 0px;
   padding: 120px 60px;
+  align-items: flex-start;
 }
 
 .product-gallery {
   flex: 1;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 15px;
 }
 
 .product-gallery img {
   width: 100%;
-  border-radius: 10px;
+  border-radius: 12px;
+  object-fit: cover;
 }
 
 .product-info-page {
   flex: 1;
+  max-width: 500px;
 }
 
 .price {
@@ -270,6 +274,19 @@ CARRITO
 
 .carrito-total {
   margin-top: 30px;
+}
+
+/* DESCRIPCIÓN */
+.description-box {
+  margin-top: 20px;
+  line-height: 1.6;
+}
+
+/* BLOQUE MEDIR PIE */
+.tabla-info {
+  margin-top: 30px;
+  font-size: 14px;
+  opacity: 0.9;
 }
 
 /* =========================
