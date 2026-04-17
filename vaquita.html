@@ -3,120 +3,199 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vaquita</title>
+  <title>Zueco Negro</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="producto">
 
+</script>
+
+<!-- HEADER -->
 <header>
   <div class="logo-container">
     <img src="img/logo.jpg" class="logo">
     <span class="brand-name">Teju Shoes</span>
   </div>
+  
+  <div class="right">
+
+  <nav>
+    <a href="#">Hombre</a>
+    <a href="#">Mujer</a>
+    <a href="tienda.html">Tienda</a>
+  </nav>
+
+  <div class="social-icons">
+
+    <a href="https://www.instagram.com/teju.shoes/?hl=es" target="_blank">
+      <img src="img/instagram.png">
+    </a>
+
+    <a href="https://wa.me/+541164535290" target="_blank">
+      <img src="img/whatsapp.png" class="icon-whatsapp">
+    </a>
+
+    <a href="carrito.html" target="_blank">
+      <img src="img/carrito.png" class="icon-carrito">
+    </a>
+    
+  </div>
+</div>
+</body>
+
 </header>
 
 <section class="product-page">
+  
+<div class="product-gallery">
 
-  <!-- IMÁGENES -->
-  <div class="product-gallery">
-    <img src="img/vaquita1.jpg">
-    <img src="img/vaquita2.jpg">
-    <img src="img/vaquita3.jpg">
-  </div>
+  <img src="img/vaquita1.jpg">
+  <img src="img/vaquita2.jpg">
+  <img src="img/vaquita3.jpg">
 
-  <!-- INFO -->
+      <!-- 👇 DESCRIPCIÓN GRANDE ABAJO -->
+    <div class="description-box">
+      <h2>DESCRIPCIÓN</h2>
+      <p>
+        Zueco de cuero hecho a mano, cómodo y resistente. 
+        Diseñado para el uso diario con base anatómica que brinda soporte y confort durante todo el día. 
+        Material premium, durabilidad alta y estilo moderno.
+      
+        <h3>TABLA DE TALLES</h3>
+        <p>23,3cm	- 35</p>
+        <p>24cm	- 36</p>
+        <p>24,7cm	- 37</p>
+        <p>25,3cm	- 38</p>
+        <p>26cm	- 39</p>
+        <p>26,7cm	- 40</p>
+        <p>27,3cm	- 41</p>
+    </div>
+
+      <div class="tabla-info">
+    <h3>COMO MEDIR TU PIE?</h3>
+    <p>
+      coloca una hoja blanca en el suelo pegada a la pared, apoya el talón contra la pared y marca el dedo más largo con un lápiz. Mide en línea recta desde el borde hasta la marca con una regla. Añade 0,5 cm para mayor comodidad y busca ese valor en la tabla de tallas
+  </p>
+    </div>
+
+
+</div>
+  <!-- DERECHA (INFO) -->
   <div class="product-info-page">
     <h1 id="nombre-producto">VAQUITA</h1>
-    <p class="price">$160650</p>
 
+    <p class="price" id="precio-producto">$3</p>
+
+    <p class="discount">
+      $0 con Transferencia o depósito
+    </p>
+
+    <p class="promo">
+      % de descuento pagando con Transferencia o depósito<br>
+      3 x $0 sin interés
+    </p>
+
+    <!-- TALLES -->
     <div class="sizes">
       <p>TALLE</p>
       <div class="options" id="talles">
-        <span>35</span><span>36</span><span>37</span>
-        <span>38</span><span>39</span><span>40</span>
+        <span>35</span>
+        <span>36</span>
+        <span>37</span>
+        <span>38</span>
+        <span>39</span>
+        <span>40</span>
+        <span>41</span>
+        <span>42</span>
+        <span>43</span>
+        <span>44</span>
+        <span>45</span>
       </div>
-    </div>
-
-    <div class="quantity">
-      <button onclick="cambiarCantidad(-1)">-</button>
-      <span id="cantidad">1</span>
-      <button onclick="cambiarCantidad(1)">+</button>
-    </div>
-
-    <button class="buy-btn" onclick="agregarAlCarrito()">
-      AGREGAR AL CARRITO
-    </button>
-  </div>
-
-</section>
-
-<section class="extra-info">
-
-  <div class="description-box">
-    <h2>DESCRIPCIÓN</h2>
-    <p>Zueco de cuero hecho a mano, cómodo y resistente.</p>
-  </div>
-
-  <div class="tabla-contenedor">
-
-    <div class="tabla-talles">
-      <h3>TABLA DE TALLES</h3>
-      <p>23,3cm - 35</p>
-      <p>24cm - 36</p>
-      <p>24,7cm - 37</p>
-    </div>
-
-    <div class="tabla-info">
-      <h3>COMO MEDIR TU PIE?</h3>
-      <p>Coloca una hoja contra la pared y medí tu pie.</p>
-    </div>
-
-  </div>
-
-</section>
 
 <script>
 let talleSeleccionado = null;
-let cantidad = 1;
 
-document.querySelectorAll("#talles span").forEach(el => {
-  el.addEventListener("click", () => {
-    document.querySelectorAll("#talles span").forEach(s => s.classList.remove("active"));
-    el.classList.add("active");
-    talleSeleccionado = el.innerText;
+window.addEventListener("DOMContentLoaded", () => {
+
+  document.querySelectorAll("#talles span").forEach(el => {
+    el.addEventListener("click", () => {
+
+      document.querySelectorAll("#talles span").forEach(s => s.classList.remove("active"));
+
+      el.classList.add("active");
+
+      talleSeleccionado = el.innerText;
+
+      console.log("Talle:", talleSeleccionado); // 👈 para probar
+    });
   });
+
 });
+</script>
+
+    <!-- CANTIDAD -->
+    <script>
+let cantidad = 1;
 
 function cambiarCantidad(valor) {
   cantidad += valor;
+
   if (cantidad < 1) cantidad = 1;
+
   document.getElementById("cantidad").innerText = cantidad;
 }
+</script>
 
+    <div class="quantity">
+  <button onclick="cambiarCantidad(-1)">-</button>
+  <span id="cantidad">1</span>
+  <button onclick="cambiarCantidad(1)">+</button>
+</div>
+
+    <!-- BOTÓN -->
+    <button class="buy-btn" onclick="agregarAlCarrito()">
+  AGREGAR AL CARRITO
+</button>
+  </div>
+
+</section>
+</html>
+
+<script>
 function agregarAlCarrito() {
+
   if (!talleSeleccionado) {
     alert("Seleccioná un talle");
     return;
   }
 
-  const nombre = document.getElementById("nombre-producto").innerText;
-  const precio = 160650;
+  const nombreEl = document.getElementById("nombre-producto");
+
+if (!nombreEl) {
+  alert("No se encontró el nombre del producto");
+  return;
+}
+
+const nombre = nombreEl.innerText;
+  const precioTexto = document.querySelector(".price")?.innerText || "$0";
+  const precio = parseInt(precioTexto.replace("$",""));
 
   const producto = {
-    nombre,
-    precio,
+    nombre: nombre,
+    precio: precio,
+    imagen: "img/zuecos1.jpg",
     talle: talleSeleccionado,
-    cantidad
+    cantidad: cantidad
   };
 
   let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
   carrito.push(producto);
+
   localStorage.setItem("carrito", JSON.stringify(carrito));
 
   alert("Producto agregado 🛒");
 }
 </script>
-
 </body>
-</html>
