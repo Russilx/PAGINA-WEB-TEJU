@@ -904,5 +904,46 @@ p {
     flex-direction: column;
     gap: 20px;
   }
+
+  /* TODO EN COLUMNA */
+  .product-page {
+    display: flex;
+    flex-direction: column !important;
+  }
+
+  /* ORDEN */
+  .product-gallery {
+    order: 1;
+  }
+
+  .product-info-page {
+    order: 2;
+  }
+
+  .description-box {
+    order: 3;
+    width: 100%;
+  }
+
+  .tabla-info {
+    order: 4;
+    width: 100%;
+  }
+
+  /* IMÁGENES GRANDES */
+  .product-gallery img {
+    width: 100%;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  /* ESPACIADO */
+  .product-info-page,
+  .description-box,
+  .tabla-info {
+    margin-top: 20px;
+  }
+
+}
   
  }
