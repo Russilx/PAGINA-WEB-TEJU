@@ -1,26 +1,43 @@
 /* =========================
-   RESET
+RESET
 ========================= */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+body {
+  background: white;
+  color: black;
+}
+
+p {
+  margin: 5px 0;
 }
 
 /* =========================
-   HEADER
+HEADER
 ========================= */
 header {
   position: fixed;
   top: 0;
   width: 100%;
-  background: transparent;
-  color: white;
+  padding: 20px 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 40px;
+  background: transparent;
+  color: white;
+  transition: 0.3s;
   z-index: 1000;
+}
+
+header.scrolled {
+  background: white;
+  color: black;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .logo-container {
@@ -31,21 +48,15 @@ header {
 
 .logo {
   width: 45px;
-  height: 45px;
   border-radius: 50%;
 }
 
 .brand-name {
-  font-size: 22px;
   font-weight: bold;
+  font-size: 22px;
 }
 
-.right {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
+/* NAV */
 nav {
   display: flex;
   gap: 30px;
@@ -57,40 +68,133 @@ nav a {
   font-weight: bold;
 }
 
+/* ICONOS */
 .social-icons {
   display: flex;
-  gap: 10px;
+  gap: 15px;
 }
 
 .social-icons img {
-  width: 35px;
+  width: 30px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.social-icons img:hover {
+  transform: scale(1.1);
 }
 
 /* =========================
-   PRODUCTO
+HERO
 ========================= */
-
-body.producto {
-  background: url("img/vaquita1.jpg") center/cover no-repeat;
+.hero {
+  height: 80vh;
+  background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+              url("img/vaquita1.jpg") center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  padding: 80px;
   color: white;
 }
 
-body.producto::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  z-index: -1;
+.hero h2 {
+  font-size: 60px;
 }
 
-/* CONTENEDOR */
+.hero button {
+  margin-top: 20px;
+  padding: 12px 25px;
+  border: none;
+  background: white;
+  cursor: pointer;
+}
+
+/* =========================
+ABOUT
+========================= */
+.about {
+  padding: 80px 20px;
+  text-align: center;
+  background: #f5f5f5;
+}
+
+.about-content {
+  max-width: 800px;
+  margin: auto;
+}
+
+/* =========================
+CATEGORÍAS
+========================= */
+.categories {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 20px;
+}
+
+.categories-container {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+}
+
+.categories-container::-webkit-scrollbar {
+  display: none;
+}
+
+.category {
+  min-width: 250px;
+  height: 350px;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+  color: white;
+  text-decoration: none;
+}
+
+.category img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.category span {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  font-weight: bold;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: black;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.arrow.left { left: 10px; }
+.arrow.right { right: 10px; }
+
+/* =========================
+PRODUCTO
+========================= */
+body.producto {
+  background: black;
+  color: white;
+}
+
 .product-page {
   display: flex;
   gap: 50px;
   padding: 120px 60px;
 }
 
-/* GALERÍA */
 .product-gallery {
   flex: 1;
   display: grid;
@@ -100,31 +204,19 @@ body.producto::before {
 
 .product-gallery img {
   width: 100%;
-  aspect-ratio: 1/1;
-  object-fit: cover;
   border-radius: 10px;
 }
 
-/* INFO */
 .product-info-page {
   flex: 1;
-  max-width: 500px;
-}
-
-.product-info-page h1 {
-  font-size: 32px;
-  margin-bottom: 10px;
 }
 
 .price {
-  font-size: 24px;
+  font-size: 22px;
   margin: 10px 0;
 }
 
-.sizes {
-  margin-top: 20px;
-}
-
+/* TALLES */
 .options {
   display: flex;
   flex-wrap: wrap;
@@ -138,108 +230,75 @@ body.producto::before {
 }
 
 .options span.active {
-  background: black;
-  color: white;
+  background: white;
+  color: black;
 }
 
+/* CANTIDAD */
 .quantity {
   display: flex;
-  gap: 15px;
-  margin: 20px 0;
+  gap: 10px;
+  margin: 15px 0;
 }
 
+/* BOTÓN */
 .buy-btn {
   width: 100%;
   padding: 15px;
-  background: black;
-  color: white;
+  background: white;
+  color: black;
   border: none;
   cursor: pointer;
 }
 
 /* =========================
-   DESCRIPCIÓN + TABLA
+CARRITO
 ========================= */
-
-.extra-info {
-  padding: 40px 60px;
+.carrito {
+  padding: 120px 60px;
 }
 
-.description-box {
-  margin-bottom: 30px;
-}
-
-.description-box h2 {
-  margin-bottom: 10px;
-}
-
-.tabla-contenedor {
+.item {
   display: flex;
-  gap: 40px;
+  gap: 20px;
+  margin-bottom: 20px;
 }
 
-.tabla-info {
-  max-width: 300px;
+.item img {
+  width: 100px;
+}
+
+.carrito-total {
+  margin-top: 30px;
 }
 
 /* =========================
-   MOBILE
+MOBILE
 ========================= */
 @media (max-width: 700px) {
-
-  header {
-    padding: 15px;
-  }
 
   nav {
     display: none;
   }
 
+  header {
+    padding: 15px;
+  }
+
+  .hero {
+    padding: 20px;
+  }
+
+  .hero h2 {
+    font-size: 32px;
+  }
+
   .product-page {
     flex-direction: column;
-    padding: 90px 15px;
+    padding: 80px 20px;
   }
 
-  /* ORDEN */
-  .product-gallery {
-    order: 1;
+  .category {
+    min-width: 80%;
   }
-
-  .product-info-page {
-    order: 2;
-  }
-
-  .extra-info {
-    order: 3;
-    padding: 20px 15px;
-  }
-
-  /* IMÁGENES */
-  .product-gallery {
-    grid-template-columns: 1fr;
-  }
-
-  .product-gallery img {
-    margin-bottom: 10px;
-  }
-
-  /* TEXTO */
-  .product-info-page h1 {
-    font-size: 26px;
-  }
-
-  .price {
-    font-size: 22px;
-  }
-
-  /* BOTÓN */
-  .buy-btn {
-    padding: 18px;
-  }
-
-  /* TABLA */
-  .tabla-contenedor {
-    flex-direction: column;
-  }
-
 }
