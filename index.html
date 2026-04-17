@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teju Store</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<!-- SCRIPT SCROLL HEADER -->
+<script>
+window.addEventListener("scroll", function() {
+
+  const header = document.querySelector("header");
+
+  if (window.scrollY > 50) {
+    header.classList.add("scrolled");
+  } else {
+    header.classList.remove("scrolled");
+  }
+});
+</script>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-container">
+    <img src="img/logo.jpg" class="logo">
+    <span class="brand-name">Teju Shoes</span>
+  </div>
+  
+  <div class="right">
+
+  <nav>
+    <a href="#">Hombre</a>
+    <a href="#">Mujer</a>
+    <a href="tienda.html">Tienda</a>
+  </nav>
+
+  <div class="social-icons">
+
+    <a href="https://www.instagram.com/teju.shoes/?hl=es" target="_blank">
+      <img src="img/instagram.png">
+    </a>
+
+    <a href="https://wa.me/+541164535290" target="_blank">
+      <img src="img/whatsapp.png" class="icon-whatsapp">
+    </a>
+
+    <a href="carrito.html" target="_blank">
+      <img src="img/carrito.png" class="icon-carrito">
+    </a>
+    
+  </div>
+</div>
+
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <h2>COMODIDAD<br>QUE SE SIENTE</h2>
+    <p>Zuecos 100% cuero</p>
+
+    <a href="tienda.html">
+      <button>Comprar</button>
+    </a>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about">
+  <div class="about-content">
+    <h3>Enfoque artesanal</h3>
+
+    <p>
+      Teju nace de la necesidad de hacer un calzado artesanal y de calidad.
+      Fomentamos el valor humano, la creatividad y el proceso.
+    </p>
+
+    <h4>VIVILA EN TEJU</h4>
+  </div>
+</section>
+
+<!-- GALERÍA -->
+<section class="categories">
+
+  <button class="arrow left" onclick="scrollCategories(-300)">‹</button>
+
+  <div class="categories-container">
+
+<a href="vaquita.html" class="category">
+  <img src="img/vaquita1.jpg" alt="Zueco negro">
+  <span class="product-name">Zueco Negro</span>
+  <div class="product-info">
+  </div>
+</a>
+
+    <a href="mujer.html" class="category">
+      <img src="img/zuecos2.jpg" alt="">
+      <span>Mujer</span>
+    </a>
+
+    <a href="nuevo.html" class="category">
+      <img src="img/zuecos3.jpg" alt="">
+      <span>Nuevo ingreso</span>
+    </a>
+
+    <a href="premium.html" class="category">
+      <img src="img/zuecos4.jpg" alt="">
+      <span>Cuero premium</span>
+    </a>
+
+    <a href="premium.html" class="category">
+      <img src="img/zuecos5.jpg" alt="">
+      <span>Cuero premium</span>
+    </a>
+
+  </div>
+
+  <button class="arrow right" onclick="scrollCategories(300)">›</button>
+
+  <script>
+ function scrollCategories(value) {
+  const el = document.querySelector('.categories-container');
+  el.scrollBy({ left: value, behavior: 'smooth' });
+}
+</script>
+</section>
+
+<section class="about">
+  <div class="about-content">
+    <h3>Diseño y bienestar</h3>
+
+    <p>
+      Con una producción cuidada y a mano, nuestros zuecos prometen comodidad y durabilidad para acompañarte en el día a día ya que utilizamos base anatómica, la cual otorga el soporte correcto que tus pies necesitan.
+    </p>
+
+  </div>
+</section>
+</body>
+</html>
