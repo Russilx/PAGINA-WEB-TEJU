@@ -845,7 +845,7 @@ p {
 
 .product-page {
   flex-direction: column;
-  padding: 100px 20px;
+  padding: 90px 15px;
   }
 
 .product-img {
@@ -873,4 +873,36 @@ p {
     align-self: flex-end;
   }
 
+    .product-gallery {
+    width: 100%;
+  }
+
+  .product-info-page {
+    width: 100%;
+    max-width: 100%;
+  }
+
+    .product-gallery img {
+    width: 100%;
+    height: auto;
+  }
+
+    .product-info-page h1 {
+    font-size: 28px;
+  }
+
+  .price {
+    font-size: 22px;
+  }
+
+    .buy-btn {
+    font-size: 16px;
+    padding: 18px;
+  }
+
+    .tabla-contenedor {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
  }
