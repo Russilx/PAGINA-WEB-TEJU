@@ -16,7 +16,6 @@
   </div>
 </header>
 
-<!-- PRODUCTO -->
 <section class="product-page">
 
   <!-- IMÁGENES -->
@@ -52,12 +51,11 @@
 
 </section>
 
-<!-- EXTRA (IMPORTANTE: FUERA DEL GALLERY) -->
 <section class="extra-info">
 
   <div class="description-box">
     <h2>DESCRIPCIÓN</h2>
-    <p>Zueco de cuero hecho a mano, cómodo y resistente...</p>
+    <p>Zueco de cuero hecho a mano, cómodo y resistente.</p>
   </div>
 
   <div class="tabla-contenedor">
@@ -71,133 +69,54 @@
 
     <div class="tabla-info">
       <h3>COMO MEDIR TU PIE?</h3>
-      <p>Coloca una hoja contra la pared...</p>
+      <p>Coloca una hoja contra la pared y medí tu pie.</p>
     </div>
 
   </div>
 
 </section>
 
-</body>
-</html>
-
-
-</div>
-  <!-- DERECHA (INFO) -->
-  <div class="product-info-page">
-    <h1 id="nombre-producto">VAQUITA</h1>
-
-    <p class="price" id="precio-producto">$3</p>
-
-    <p class="discount">
-      $0 con Transferencia o depósito
-    </p>
-
-    <p class="promo">
-      % de descuento pagando con Transferencia o depósito<br>
-      3 x $0 sin interés
-    </p>
-
-    <!-- TALLES -->
-    <div class="sizes">
-      <p>TALLE</p>
-      <div class="options" id="talles">
-        <span>35</span>
-        <span>36</span>
-        <span>37</span>
-        <span>38</span>
-        <span>39</span>
-        <span>40</span>
-        <span>41</span>
-        <span>42</span>
-        <span>43</span>
-        <span>44</span>
-        <span>45</span>
-      </div>
-
 <script>
 let talleSeleccionado = null;
-
-window.addEventListener("DOMContentLoaded", () => {
-
-  document.querySelectorAll("#talles span").forEach(el => {
-    el.addEventListener("click", () => {
-
-      document.querySelectorAll("#talles span").forEach(s => s.classList.remove("active"));
-
-      el.classList.add("active");
-
-      talleSeleccionado = el.innerText;
-
-      console.log("Talle:", talleSeleccionado); // 👈 para probar
-    });
-  });
-
-});
-</script>
-
-    <!-- CANTIDAD -->
-    <script>
 let cantidad = 1;
+
+document.querySelectorAll("#talles span").forEach(el => {
+  el.addEventListener("click", () => {
+    document.querySelectorAll("#talles span").forEach(s => s.classList.remove("active"));
+    el.classList.add("active");
+    talleSeleccionado = el.innerText;
+  });
+});
 
 function cambiarCantidad(valor) {
   cantidad += valor;
-
   if (cantidad < 1) cantidad = 1;
-
   document.getElementById("cantidad").innerText = cantidad;
 }
-</script>
 
-    <div class="quantity">
-  <button onclick="cambiarCantidad(-1)">-</button>
-  <span id="cantidad">1</span>
-  <button onclick="cambiarCantidad(1)">+</button>
-</div>
-
-    <!-- BOTÓN -->
-    <button class="buy-btn" onclick="agregarAlCarrito()">
-  AGREGAR AL CARRITO
-</button>
-  </div>
-
-</section>
-</html>
-
-<script>
 function agregarAlCarrito() {
-
   if (!talleSeleccionado) {
     alert("Seleccioná un talle");
     return;
   }
 
-  const nombreEl = document.getElementById("nombre-producto");
-
-if (!nombreEl) {
-  alert("No se encontró el nombre del producto");
-  return;
-}
-
-const nombre = nombreEl.innerText;
-  const precioTexto = document.querySelector(".price")?.innerText || "$0";
-  const precio = parseInt(precioTexto.replace("$",""));
+  const nombre = document.getElementById("nombre-producto").innerText;
+  const precio = 160650;
 
   const producto = {
-    nombre: nombre,
-    precio: precio,
-    imagen: "img/zuecos1.jpg",
+    nombre,
+    precio,
     talle: talleSeleccionado,
-    cantidad: cantidad
+    cantidad
   };
 
   let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-
   carrito.push(producto);
-
   localStorage.setItem("carrito", JSON.stringify(carrito));
 
   alert("Producto agregado 🛒");
 }
 </script>
+
 </body>
+</html>
