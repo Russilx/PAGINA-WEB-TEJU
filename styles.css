@@ -944,6 +944,46 @@ p {
     margin-top: 20px;
   }
 
+   @media (max-width: 700px) {
+
+  /* CONTENEDOR PRINCIPAL */
+  .product-page {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 1️⃣ IMÁGENES */
+  .product-gallery {
+    order: 1;
+  }
+
+  /* 2️⃣ INFO */
+  .product-info-page {
+    order: 2;
+  }
+
+  /* 👇 IMPORTANTE: sacamos estos del flow interno */
+  .description-box,
+  .tabla-info {
+    position: relative;
+    left: 0;
+    width: 100%;
+  }
+
+  /* 3️⃣ DESCRIPCIÓN */
+  .description-box {
+    order: 3;
+    margin-top: 20px;
+  }
+
+  /* 4️⃣ TABLA */
+  .tabla-info {
+    order: 4;
+    margin-top: 20px;
+  }
+
+}
+
 }
   
  }
