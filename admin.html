@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de administración — Teju Shoes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=11">
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="topbar-inner">
+      <a class="wordmark" href="index.html">Teju <span>Shoes</span></a>
+      <a class="back-btn" href="index.html">← Volver al sitio</a>
+    </div>
+  </div>
+
+  <div class="admin-shell">
+
+    <div class="admin-login-card" id="admin-login-card">
+      <h2>Acceso <span style="font-style:italic; color:var(--cork);">administrador</span></h2>
+      <p class="sub">Ingresá la contraseña para gestionar productos y pedidos.</p>
+      <div class="field">
+        <label for="admin-pass">Contraseña</label>
+        <input id="admin-pass" type="password" placeholder="••••••••">
+      </div>
+      <div class="form-error" id="admin-login-error"></div>
+      <button class="btn btn-primary btn-block" id="admin-login-btn">Ingresar</button>
+    </div>
+
+    <div id="admin-panel" style="display:none;">
+      <div class="admin-tabs">
+        <button class="admin-tab" id="tab-productos">Productos</button>
+        <button class="admin-tab" id="tab-pedidos">Pedidos</button>
+      </div>
+
+      <!-- TAB PRODUCTOS -->
+      <div id="panel-productos" style="display:none;">
+        <div class="admin-header"><h2>Panel de <span style="font-style:italic; color:var(--cork);">productos</span></h2></div>
+        <p class="sub">Cargá los pares que vendés, con sus talles disponibles y su foto.</p>
+
+        <div class="prod-form" id="prod-form">
+          <input type="hidden" id="prod-edit-id" value="">
+          <div class="field">
+            <label for="prod-nombre">Nombre</label>
+            <input id="prod-nombre" type="text" placeholder="Ej: Zueco Sereno cuero natural">
+          </div>
+          <div class="field">
+            <label for="prod-categoria">Categoría</label>
+            <input id="prod-categoria" type="text" placeholder="Ej: Zueco, Sandalia, Zapatilla">
+          </div>
+          <div class="field">
+            <label for="prod-descripcion">Descripción</label>
+            <textarea id="prod-descripcion" placeholder="Materiales, cuidados, detalles del modelo…"></textarea>
+          </div>
+
+          <div class="field">
+            <label>Talles y precios</label>
+            <div class="chip-input-row">
+              <input id="prod-talla-input" type="text" placeholder="Ej: 37 ó 35-40" inputmode="text" style="max-width:140px;">
+              <input id="prod-talla-precio-input" type="text" inputmode="decimal" placeholder="Precio. Ej: 45000">
+              <input id="prod-talla-precio-mayorista-input" type="text" inputmode="decimal" placeholder="Precio mayorista (opcional)">
+              <button type="button" class="btn btn-ghost" id="prod-talla-add-btn">Agregar</button>
+            </div>
+            <div class="form-note">Podés cargar un talle solo (ej: 37) o un rango con el mismo precio (ej: 35-40). El precio mayorista es opcional: se le aplica al cliente automáticamente cuando junta 12 pares o más en su pedido. Repetí el paso con otros precios para el resto de los talles.</div>
+            <div class="chip-list" id="prod-talla-list"></div>
+          </div>
+
+          <div class="field">
+            <label for="prod-imagenes-file">Fotos del producto</label>
+            <input id="prod-imagenes-file" type="file" accept="image/*" multiple>
+            <div class="form-note">Podés seleccionar varias fotos a la vez (o repetir el paso para ir agregando más). La primera foto de la lista es la que se usa como portada en el catálogo.</div>
+            <div class="imagenes-grid" id="prod-imagenes-preview" style="margin-top:10px;"></div>
+          </div>
+
+          <div class="form-error" id="prod-form-error"></div>
+          <div style="display:flex; gap:10px;">
+            <button class="btn btn-cork" style="width:100%;" id="prod-submit-btn">Crear producto</button>
+            <button class="btn btn-ghost" style="width:100%; display:none;" id="prod-cancel-btn">Cancelar edición</button>
+          </div>
+        </div>
+
+        <div id="admin-prod-list" class="admin-list" style="margin-top:24px;">
+          <div class="loading-row">Cargando productos…</div>
+        </div>
+      </div>
+
+      <!-- TAB PEDIDOS -->
+      <div id="panel-pedidos" style="display:none;">
+        <div class="admin-header"><h2>Panel de <span style="font-style:italic; color:var(--cork);">pedidos</span></h2></div>
+        <p class="sub">Pedidos recibidos desde el sitio. Coordiná el pago y la entrega por WhatsApp, y actualizá el estado acá.</p>
+
+        <div id="admin-pedido-list" class="admin-list">
+          <div class="loading-row">Cargando pedidos…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { firebaseConfig, ADMIN_PASSWORD, IMGBB_API_KEY, WHATSAPP_PEDIDOS, ENVIO_ZONAS } from './firebase-config.js';
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+    import { initializeFirestore, collection, getDocs, doc, updateDoc, addDoc, deleteDoc, query, orderBy, serverTimestamp }
+      from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+    const app = initializeApp(firebaseConfig);
+    const db = initializeFirestore(app, { experimentalForceLongPolling: true });
+
+    function escapeHtml(str){
+      return String(str ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+    function parsearPrecio(valor){
+      if(valor == null) return null;
+      const limpio = String(valor).trim().replace(/\./g, '').replace(',', '.');
+      const n = parseFloat(limpio);
+      return isNaN(n) ? null : n;
+    }
+    // Acepta "37" (un talle) o "35-40" (rango) y devuelve la lista de talles.
+    function parsearRangoTallas(valor){
+      const texto = String(valor ?? '').trim();
+      const match = texto.match(/^(\d+)\s*-\s*(\d+)$/);
+      if(match){
+        const desde = parseInt(match[1], 10);
+        const hasta = parseInt(match[2], 10);
+        if(!isNaN(desde) && !isNaN(hasta) && desde <= hasta && (hasta - desde) < 50){
+          const lista = [];
+          for(let t = desde; t <= hasta; t++) lista.push(String(t));
+          return lista;
+        }
+      }
+      return texto ? [texto] : [];
+    }
+    // Agrupa los talles por precio para mostrarlos de forma compacta (ej: "35, 36, 37 · $45.000").
+    function agruparTallasPorPrecio(tallas){
+      const grupos = new Map();
+      (tallas || []).forEach(t => {
+        const key = `${t.precio}_${t.precioMayorista ?? ''}`;
+        if(!grupos.has(key)) grupos.set(key, { precio: t.precio, precioMayorista: t.precioMayorista ?? null, talles: [] });
+        grupos.get(key).talles.push(t.talla);
+      });
+      return Array.from(grupos.values());
+    }
+    // Compatibilidad: productos viejos guardaban tallas como array de strings ["37","38"] con un precio único.
+    function normalizarTallas(p){
+      const tallas = p.tallas || [];
+      if(!tallas.length) return [];
+      if(typeof tallas[0] === 'object' && tallas[0] !== null) return tallas;
+      return tallas.map(t => ({ talla: t, precio: p.precio ?? 0 }));
+    }
+    function formatearPrecioARS(n){
+      return '$' + Number(n).toLocaleString('es-AR', { maximumFractionDigits: 0 });
+    }
+
+    /* ============================================================
+       LOGIN
+       ============================================================ */
+    const SESSION_KEY = 'teju_admin_ok';
+
+    function entrarPanel(){
+      document.getElementById('admin-login-card').style.display = 'none';
+      document.getElementById('admin-panel').style.display = 'block';
+      activarTab('productos');
+      cargarProductos();
+      cargarPedidos();
+    }
+
+    document.getElementById('admin-login-btn').addEventListener('click', () => {
+      const pass = document.getElementById('admin-pass').value;
+      const errorEl = document.getElementById('admin-login-error');
+      if(pass === ADMIN_PASSWORD){
+        sessionStorage.setItem(SESSION_KEY, '1');
+        entrarPanel();
+      }else{
+        errorEl.textContent = 'Contraseña incorrecta.';
+      }
+    });
+    document.getElementById('admin-pass').addEventListener('keydown', (e) => {
+      if(e.key === 'Enter') document.getElementById('admin-login-btn').click();
+    });
+
+    /* ============================================================
+       TABS
+       ============================================================ */
+    const tabs = {
+      productos: { btn: document.getElementById('tab-productos'), panel: document.getElementById('panel-productos') },
+      pedidos: { btn: document.getElementById('tab-pedidos'), panel: document.getElementById('panel-pedidos') },
+    };
+    function activarTab(nombre){
+      Object.entries(tabs).forEach(([key, t]) => {
+        t.btn.classList.toggle('active', key === nombre);
+        t.panel.style.display = key === nombre ? 'block' : 'none';
+      });
+    }
+    tabs.productos.btn.addEventListener('click', () => activarTab('productos'));
+    tabs.pedidos.btn.addEventListener('click', () => activarTab('pedidos'));
+
+    // El auto-login (si ya habías entrado antes) se hace acá, una vez que
+    // 'tabs' y el resto de las funciones ya están definidas.
+    if(sessionStorage.getItem(SESSION_KEY) === '1'){
+      entrarPanel();
+    }
+
+    /* ============================================================
+       PRODUCTOS
+       ============================================================ */
+    let productosCache = [];
+    let tallasActuales = [];
+    let imagenesActuales = [];
+
+    const prodForm = document.getElementById('prod-form');
+    const prodEditId = document.getElementById('prod-edit-id');
+    const prodNombre = document.getElementById('prod-nombre');
+    const prodCategoria = document.getElementById('prod-categoria');
+    const prodDescripcion = document.getElementById('prod-descripcion');
+    const prodFormError = document.getElementById('prod-form-error');
+    const prodSubmitBtn = document.getElementById('prod-submit-btn');
+    const prodCancelBtn = document.getElementById('prod-cancel-btn');
+    const prodTallaInput = document.getElementById('prod-talla-input');
+    const prodTallaPrecioInput = document.getElementById('prod-talla-precio-input');
+    const prodTallaPrecioMayoristaInput = document.getElementById('prod-talla-precio-mayorista-input');
+    const prodTallaList = document.getElementById('prod-talla-list');
+    const prodImagenesFile = document.getElementById('prod-imagenes-file');
+    const prodImagenesPreview = document.getElementById('prod-imagenes-preview');
+
+function ordenarTallas(){
+      tallasActuales.sort((a, b) => {
+        const na = parseFloat(a.talla), nb = parseFloat(b.talla);
+        if(!isNaN(na) && !isNaN(nb) && na !== nb) return na - nb;
+        return String(a.talla).localeCompare(String(b.talla));
+      });
+    }
+
+    function renderTallasChips(){
+      prodTallaList.innerHTML = tallasActuales.map((t, i) => `
+        <span class="chip-removable">${escapeHtml(t.talla)} · ${formatearPrecioARS(t.precio)}${t.precioMayorista != null ? ` (mayorista ${formatearPrecioARS(t.precioMayorista)})` : ''}<button type="button" data-quitar-talla="${i}">×</button></span>
+      `).join('');
+      prodTallaList.querySelectorAll('[data-quitar-talla]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          tallasActuales.splice(Number(btn.dataset.quitarTalla), 1);
+          renderTallasChips();
+        });
+      });
+    }
+
+    function agregarTallaDesdeInput(){
+      const rango = prodTallaInput.value.trim();
+      const precio = parsearPrecio(prodTallaPrecioInput.value);
+      const precioMayoristaTexto = prodTallaPrecioMayoristaInput.value.trim();
+      const precioMayorista = precioMayoristaTexto ? parsearPrecio(precioMayoristaTexto) : null;
+      prodFormError.textContent = '';
+
+      if(!rango){ prodFormError.textContent = 'Ingresá un talle o un rango (ej: 35-40).'; return; }
+      if(precio == null || precio <= 0){ prodFormError.textContent = 'Ingresá un precio válido para ese talle.'; return; }
+      if(precioMayoristaTexto && (precioMayorista == null || precioMayorista <= 0)){ prodFormError.textContent = 'Ingresá un precio mayorista válido, o dejalo vacío.'; return; }
+      if(precioMayorista != null && precioMayorista >= precio){ prodFormError.textContent = 'El precio mayorista debe ser menor al precio normal.'; return; }
+
+      const talles = parsearRangoTallas(rango);
+      talles.forEach(talla => {
+        const existente = tallasActuales.find(t => t.talla === talla);
+        if(existente){ existente.precio = precio; existente.precioMayorista = precioMayorista; }
+        else{ tallasActuales.push({ talla, precio, precioMayorista }); }
+      });
+      ordenarTallas();
+
+      prodTallaInput.value = '';
+      prodTallaPrecioInput.value = '';
+      prodTallaPrecioMayoristaInput.value = '';
+      renderTallasChips();
+      prodTallaInput.focus();
+    }
+    document.getElementById('prod-talla-add-btn').addEventListener('click', agregarTallaDesdeInput);
+    prodTallaInput.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter'){ e.preventDefault(); agregarTallaDesdeInput(); }
+    });
+    prodTallaPrecioInput.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter'){ e.preventDefault(); agregarTallaDesdeInput(); }
+    });
+    prodTallaPrecioMayoristaInput.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter'){ e.preventDefault(); agregarTallaDesdeInput(); }
+    });
+
+    function renderImagenesPreview(){
+      prodImagenesPreview.innerHTML = imagenesActuales.map((url, i) => `
+        <div class="imagen-thumb">
+          <img src="${url}" alt="">
+          ${i === 0 ? '<span class="imagen-thumb-tag">Portada</span>' : ''}
+          <button type="button" class="imagen-thumb-remove" data-quitar-imagen="${i}" title="Eliminar foto">×</button>
+        </div>
+      `).join('');
+      prodImagenesPreview.querySelectorAll('[data-quitar-imagen]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          imagenesActuales.splice(Number(btn.dataset.quitarImagen), 1);
+          renderImagenesPreview();
+        });
+      });
+    }
+
+    async function subirImagenAImgbb(file){
+      const formData = new FormData();
+      formData.append('image', file);
+      const resp = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData });
+      const data = await resp.json();
+      if(!data.success) throw new Error('No se pudo subir la imagen a imgbb.');
+      return data.data.url;
+    }
+
+    prodImagenesFile.addEventListener('change', async () => {
+      const files = Array.from(prodImagenesFile.files);
+      if(!files.length) return;
+      prodFormError.textContent = '';
+      prodImagenesFile.disabled = true;
+
+      for(const file of files){
+        const placeholder = document.createElement('div');
+        placeholder.className = 'imagen-thumb imagen-thumb-loading';
+        placeholder.textContent = 'Subiendo…';
+        prodImagenesPreview.appendChild(placeholder);
+        try{
+          const url = await subirImagenAImgbb(file);
+          imagenesActuales.push(url);
+          renderImagenesPreview();
+        }catch(err){
+          console.error('Error al subir una foto:', err);
+          prodFormError.textContent = 'No se pudo subir una de las fotos. Probá de nuevo.';
+          placeholder.remove();
+        }
+      }
+
+      prodImagenesFile.value = '';
+      prodImagenesFile.disabled = false;
+    });
+
+    async function cargarProductos(){
+      const listEl = document.getElementById('admin-prod-list');
+      listEl.innerHTML = '<div class="loading-row">Cargando productos…</div>';
+      try{
+        const q = query(collection(db, "productos"), orderBy("fecha", "desc"));
+        const snapshot = await getDocs(q);
+        productosCache = [];
+        snapshot.forEach(d => productosCache.push({ id: d.id, ...d.data() }));
+
+        if(!productosCache.length){
+          listEl.innerHTML = '<div class="empty-state">Todavía no cargaste productos.</div>';
+          return;
+        }
+
+        listEl.innerHTML = productosCache.map(p => renderProdCard(p)).join('');
+        productosCache.forEach(p => {
+          const editBtn = document.getElementById('editar-prod-' + p.id);
+          const toggleBtn = document.getElementById('toggle-prod-' + p.id);
+          const delBtn = document.getElementById('borrar-prod-' + p.id);
+          if(editBtn) editBtn.addEventListener('click', () => editarProducto(p));
+          if(toggleBtn) toggleBtn.addEventListener('click', () => toggleActivoProducto(p));
+          if(delBtn) delBtn.addEventListener('click', () => borrarProducto(p));
+        });
+      }catch(err){
+        console.error('Error al cargar productos:', err);
+        listEl.innerHTML = '<div class="empty-state">No se pudieron cargar los productos. Revisá la configuración de Firebase.</div>';
+      }
+    }
+
+    function renderProdCard(p){
+      const activo = p.activo !== false;
+      const grupos = agruparTallasPorPrecio(normalizarTallas(p));
+      const tallesTexto = grupos.length
+        ? grupos.map(g => `${g.talles.join(', ')} (${formatearPrecioARS(g.precio)}${g.precioMayorista != null ? `, mayorista ${formatearPrecioARS(g.precioMayorista)}` : ''})`).join(' · ')
+        : '—';
+      const portada = (Array.isArray(p.imagenes) && p.imagenes.length) ? p.imagenes[0] : (p.imagen || '');
+      const cantFotos = Array.isArray(p.imagenes) ? p.imagenes.length : (p.imagen ? 1 : 0);
+      return `
+        <div class="reg-card">
+          <div class="reg-top">
+            <div style="display:flex; gap:12px;">
+              ${portada ? `<div style="width:56px; height:56px; border-radius:8px; background:var(--bone) center/cover no-repeat; background-image:url('${portada}'); flex-shrink:0;"></div>` : ''}
+              <div>
+                <div class="reg-name">${escapeHtml(p.nombre)}</div>
+                <div class="reg-meta">${escapeHtml(p.categoria || 'Calzado')} · talles: ${tallesTexto}</div>
+                <div class="reg-meta">${cantFotos} foto${cantFotos === 1 ? '' : 's'}</div>
+              </div>
+            </div>
+            <span class="status-pill ${activo ? 'status-confirmado' : 'status-cancelado'}">${activo ? 'Publicado' : 'Oculto'}</span>
+          </div>
+          <div class="reg-actions">
+            <button class="mini-btn" id="editar-prod-${p.id}">Editar</button>
+            <button class="mini-btn" id="toggle-prod-${p.id}">${activo ? 'Ocultar' : 'Publicar'}</button>
+            <button class="mini-btn mini-danger" id="borrar-prod-${p.id}">Borrar</button>
+          </div>
+        </div>
+      `;
+    }
+
+    async function guardarProducto(){
+      prodFormError.textContent = '';
+
+      const nombre = prodNombre.value.trim();
+      const categoria = prodCategoria.value.trim();
+      const descripcion = prodDescripcion.value.trim();
+      const editId = prodEditId.value;
+
+      if(!nombre){ prodFormError.textContent = 'Ingresá un nombre para el producto.'; return; }
+      if(!tallasActuales.length){ prodFormError.textContent = 'Agregá al menos un talle con su precio.'; return; }
+
+      const precios = tallasActuales.map(t => t.precio);
+      const precio = Math.min(...precios);
+      const precioMax = Math.max(...precios);
+
+      prodSubmitBtn.disabled = true;
+      const textoOriginal = prodSubmitBtn.textContent;
+      prodSubmitBtn.textContent = 'Guardando…';
+
+      try{
+        const datos = { nombre, categoria, precio, precioMax, descripcion, tallas: [...tallasActuales], imagenes: [...imagenesActuales], imagen: imagenesActuales[0] || '' };
+
+        if(editId){
+          await updateDoc(doc(db, "productos", editId), datos);
+        }else{
+          await addDoc(collection(db, "productos"), { ...datos, activo: true, fecha: serverTimestamp() });
+        }
+
+        cancelarEdicionProducto();
+        cargarProductos();
+      }catch(err){
+        console.error('Error al guardar el producto:', err);
+        prodFormError.textContent = 'No se pudo guardar el producto. Probá de nuevo.';
+      }finally{
+        prodSubmitBtn.disabled = false;
+        prodSubmitBtn.textContent = textoOriginal;
+      }
+    }
+
+    function editarProducto(p){
+      prodEditId.value = p.id;
+      prodNombre.value = p.nombre || '';
+      prodCategoria.value = p.categoria || '';
+      prodDescripcion.value = p.descripcion || '';
+      tallasActuales = normalizarTallas(p);
+      ordenarTallas();
+      renderTallasChips();
+      imagenesActuales = Array.isArray(p.imagenes) && p.imagenes.length ? [...p.imagenes] : (p.imagen ? [p.imagen] : []);
+      renderImagenesPreview();
+      prodImagenesFile.value = '';
+      prodSubmitBtn.textContent = 'Guardar cambios';
+      prodCancelBtn.style.display = 'block';
+      prodFormError.textContent = '';
+      prodForm.scrollIntoView({ behavior:'smooth', block:'center' });
+    }
+
+    function cancelarEdicionProducto(){
+      prodEditId.value = '';
+      prodNombre.value = '';
+      prodCategoria.value = '';
+      prodDescripcion.value = '';
+      tallasActuales = [];
+      prodTallaInput.value = '';
+      prodTallaPrecioInput.value = '';
+      prodTallaPrecioMayoristaInput.value = '';
+      renderTallasChips();
+      imagenesActuales = [];
+      renderImagenesPreview();
+      prodImagenesFile.value = '';
+      prodSubmitBtn.textContent = 'Crear producto';
+      prodCancelBtn.style.display = 'none';
+      prodFormError.textContent = '';
+    }
+
+    async function toggleActivoProducto(p){
+      try{
+        await updateDoc(doc(db, "productos", p.id), { activo: !(p.activo !== false) });
+        cargarProductos();
+      }catch(err){
+        console.error('Error al cambiar el estado del producto:', err);
+        alert('No se pudo actualizar el producto.');
+      }
+    }
+
+    async function borrarProducto(p){
+      if(!confirm(`¿Borrar "${p.nombre}" definitivamente?`)) return;
+      try{
+        await deleteDoc(doc(db, "productos", p.id));
+        cargarProductos();
+      }catch(err){
+        console.error('Error al borrar el producto:', err);
+        alert('No se pudo borrar el producto.');
+      }
+    }
+
+    prodSubmitBtn.addEventListener('click', guardarProducto);
+    prodCancelBtn.addEventListener('click', cancelarEdicionProducto);
+
+    /* ============================================================
+       PEDIDOS
+       ============================================================ */
+    const ESTADOS = ['pendiente', 'confirmado', 'enviado', 'entregado', 'cancelado'];
+    const ESTADO_LABELS = { pendiente: 'Pendiente', confirmado: 'Confirmado', enviado: 'Enviado', entregado: 'Entregado', cancelado: 'Cancelado' };
+    const PUNTO_RETIRO_LABELS = { fabrica: 'Fábrica — San Francisco Solano', flores: 'Punto de retiro — Flores' };
+
+    async function cargarPedidos(){
+      const listEl = document.getElementById('admin-pedido-list');
+      listEl.innerHTML = '<div class="loading-row">Cargando pedidos…</div>';
+      try{
+        const q = query(collection(db, "pedidos"), orderBy("fecha", "desc"));
+        const snapshot = await getDocs(q);
+
+        if(snapshot.empty){
+          listEl.innerHTML = '<div class="empty-state">Todavía no llegaron pedidos.</div>';
+          return;
+        }
+
+        const pedidos = [];
+        snapshot.forEach(d => pedidos.push({ id: d.id, ...d.data() }));
+
+        listEl.innerHTML = pedidos.map(p => renderPedidoCard(p)).join('');
+
+        pedidos.forEach(p => {
+          const select = document.getElementById('estado-pedido-' + p.id);
+          if(select) select.addEventListener('change', () => cambiarEstadoPedido(p.id, select.value));
+        });
+      }catch(err){
+        console.error('Error al cargar pedidos:', err);
+        listEl.innerHTML = '<div class="empty-state">No se pudieron cargar los pedidos. Revisá la configuración de Firebase.</div>';
+      }
+    }
+
+    function renderPedidoCard(p){
+      const estado = p.estado || 'pendiente';
+      const itemsTxt = (p.items || []).map(i => `${i.cantidad}x ${escapeHtml(i.nombre)} (talle ${escapeHtml(i.talla)})`).join('<br>');
+      const zona = ENVIO_ZONAS.find(z => z.id === p.cliente?.zonaEnvio);
+      const zonaTxt = p.cliente?.zonaEnvio === 'otra' ? 'otra provincia (a coordinar)' : (zona?.nombre || '—');
+      const entregaTxt = p.cliente?.entrega === 'envio'
+        ? `Envío a: ${escapeHtml(p.cliente?.direccion || '—')} · Zona: ${escapeHtml(zonaTxt)}${p.costoEnvio ? ` (${formatearPrecioARS(p.costoEnvio)})` : ''}`
+        : `Retiro en: ${escapeHtml(PUNTO_RETIRO_LABELS[p.cliente?.puntoRetiro] || 'el local')}`;
+      const wspHref = `https://wa.me/${(p.cliente?.whatsapp || '').replace(/[^0-9]/g,'')}`;
+
+      return `
+        <div class="reg-card">
+          <div class="reg-top">
+            <div>
+              <div class="reg-name">#${p.id.slice(0,8).toUpperCase()} · ${escapeHtml(p.cliente?.nombre || 'Sin nombre')}</div>
+              <div class="reg-meta">${itemsTxt}</div>
+              <div class="reg-meta">${entregaTxt} · Pago: ${escapeHtml(p.metodoPago || '—')} · Total: ${formatearPrecioARS(p.total || 0)}${p.mayorista ? ' · <strong>Precio mayorista</strong>' : ''}</div>
+              ${p.nota ? `<div class="reg-meta">Nota: ${escapeHtml(p.nota)}</div>` : ''}
+            </div>
+            <span class="status-pill status-${estado}">${ESTADO_LABELS[estado] || estado}</span>
+          </div>
+          <div class="reg-actions">
+            <a class="mini-btn" href="${wspHref}" target="_blank" rel="noopener">WhatsApp</a>
+            <select class="field-select" id="estado-pedido-${p.id}" style="width:auto; padding:6px 10px; font-size:12px;">
+              ${ESTADOS.map(e => `<option value="${e}" ${e === estado ? 'selected' : ''}>${ESTADO_LABELS[e]}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+      `;
+    }
+
+    async function cambiarEstadoPedido(id, nuevoEstado){
+      try{
+        await updateDoc(doc(db, "pedidos", id), { estado: nuevoEstado });
+        cargarPedidos();
+      }catch(err){
+        console.error('Error al cambiar el estado del pedido:', err);
+        alert('No se pudo actualizar el estado del pedido.');
+      }
+    }
+  </script>
+</body>
+</html>

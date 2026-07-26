@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catálogo — Teju Shoes</title>
+<meta name="description" content="Todos los zuecos y calzados de cuero de Teju Shoes. Filtrá por categoría y elegí tu talle.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=11">
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="topbar-inner">
+      <a class="wordmark" href="index.html">Teju <span>Shoes</span></a>
+      <nav class="topbar-nav">
+        <a href="catalogo.html">Catálogo</a>
+        <a href="index.html#mayorista">Mayorista</a>
+        <a href="index.html#contacto-footer">Contacto</a>
+      </nav>
+      <button class="cart-btn" id="cart-open-btn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+        Carrito
+        <span class="cart-count" id="cart-count" style="display:none;">0</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="wrap" style="padding-top:20px;">
+    <div class="eyebrow">Todos los modelos</div>
+    <h1 style="font-size:32px; margin-top:8px;">Catálogo</h1>
+  </div>
+
+  <section class="wrap">
+    <div class="catalogo-toolbar">
+      <input class="catalogo-search" id="catalogo-search" type="text" placeholder="Buscar por nombre o categoría…">
+      <span class="form-note" id="catalogo-contador"></span>
+    </div>
+    <div class="catalogo-chips" id="catalogo-chips" style="margin-bottom:26px;"></div>
+
+    <div class="product-grid" id="product-grid">
+      <div class="loading-row">Cargando productos…</div>
+    </div>
+  </section>
+
+  <!-- CARRITO -->
+  <div class="cart-overlay" id="cart-overlay"></div>
+  <aside class="cart-drawer" id="cart-drawer">
+    <div class="cart-head">
+      <h3>Tu carrito</h3>
+      <button class="cart-close" id="cart-close" type="button">×</button>
+    </div>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-foot">
+      <div class="mayorista-note" id="cart-mayorista-note" style="display:none;"></div>
+      <div class="cart-total-row">
+        <span>Total</span>
+        <span id="cart-total">$0</span>
+      </div>
+      <a class="btn btn-primary btn-block" href="carrito.html">Ir a pagar</a>
+    </div>
+  </aside>
+
+  <!-- FOOTER -->
+  <footer class="site-footer" id="contacto-footer">
+    <div class="wrap">
+      <div class="stitch" style="margin-bottom:26px;"></div>
+      <div class="site-footer-inner">
+        <span class="site-footer-title">Teju Shoes © <span id="footer-year"></span></span>
+        <div class="site-footer-links">
+          <a class="footer-link" id="footer-wsp-link" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.5.1-.3-.1-1.1-.4-2.1-1.3-.8-.7-1.3-1.6-1.5-1.8-.2-.3 0-.4.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.2-.4.1-.2 0-.3 0-.5-.1-.1-.6-1.5-.8-2-.2-.5-.4-.4-.6-.5h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.3 0 1.3 1 2.6 1.1 2.8.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.3.2-.6.2-1.1.2-1.3-.1-.1-.3-.2-.6-.3z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.4C8.6 21.5 10.3 22 12 22c5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3.1.8.8-3-.2-.3C4 14.7 3.6 13.4 3.6 12c0-4.6 3.8-8.4 8.4-8.4s8.4 3.8 8.4 8.4-3.8 8.4-8.4 8.4z"/></svg>
+            WhatsApp
+          </a>
+          <a class="footer-link" id="footer-ig-link" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+            Instagram
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { firebaseConfig, WHATSAPP_PEDIDOS, INSTAGRAM_TEJU } from './firebase-config.js';
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+    import { initializeFirestore, collection, getDocs, query, orderBy }
+      from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+    import { formatearPrecioARS, initCartDrawerToggle } from './carrito.js';
+
+    const app = initializeApp(firebaseConfig);
+    const db = initializeFirestore(app, { experimentalForceLongPolling: true });
+
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+    const wspTexto = encodeURIComponent('Hola! Tengo una consulta sobre Teju Shoes.');
+    document.getElementById('footer-wsp-link').href = `https://wa.me/${WHATSAPP_PEDIDOS}?text=${wspTexto}`;
+    document.getElementById('footer-ig-link').href = INSTAGRAM_TEJU;
+
+    function escapeHtml(str){
+      return String(str ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    // Compatibilidad: productos viejos guardaban tallas como array de strings con un precio único.
+    function normalizarTallas(p){
+      const tallas = p.tallas || [];
+      if(!tallas.length) return [];
+      if(typeof tallas[0] === 'object' && tallas[0] !== null) return tallas;
+      return tallas.map(t => ({ talla: t, precio: p.precio ?? 0 }));
+    }
+
+    // Compatibilidad: productos viejos guardaban una sola foto en el campo "imagen".
+    function portadaProducto(p){
+      if(Array.isArray(p.imagenes) && p.imagenes.length) return p.imagenes[0];
+      return p.imagen || '';
+    }
+
+    let productosCache = [];
+    let categoriaActiva = 'todos';
+    let textoBusqueda = '';
+
+    async function cargarProductos(){
+      const grid = document.getElementById('product-grid');
+      try{
+        const q = query(collection(db, "productos"), orderBy("fecha", "desc"));
+        const snapshot = await getDocs(q);
+
+        productosCache = [];
+        snapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          if(data.activo === false) return;
+          productosCache.push({ id: docSnap.id, ...data });
+        });
+
+        renderChips();
+        aplicarFiltros();
+      }catch(err){
+        console.error('Error al cargar productos:', err);
+        grid.innerHTML = '<div class="empty-state">No se pudieron cargar los productos. Revisá la configuración de Firebase.</div>';
+      }
+    }
+
+    function renderChips(){
+      const contEl = document.getElementById('catalogo-chips');
+      const categorias = Array.from(new Set(productosCache.map(p => p.categoria || 'Calzado'))).sort((a, b) => a.localeCompare(b));
+
+      if(!categorias.length){
+        contEl.innerHTML = '';
+        return;
+      }
+
+      const chips = ['todos', ...categorias];
+      contEl.innerHTML = chips.map(c => `
+        <button type="button" class="catalogo-chip ${c === categoriaActiva ? 'active' : ''}" data-cat="${escapeHtml(c)}">${c === 'todos' ? 'Todos' : escapeHtml(c)}</button>
+      `).join('');
+
+      contEl.querySelectorAll('[data-cat]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          categoriaActiva = btn.dataset.cat;
+          renderChips();
+          aplicarFiltros();
+        });
+      });
+    }
+
+    function aplicarFiltros(){
+      const texto = textoBusqueda.trim().toLowerCase();
+      const filtrados = productosCache.filter(p => {
+        const coincideCategoria = categoriaActiva === 'todos' || (p.categoria || 'Calzado') === categoriaActiva;
+        const coincideTexto = !texto || p.nombre.toLowerCase().includes(texto) || (p.categoria || '').toLowerCase().includes(texto);
+        return coincideCategoria && coincideTexto;
+      });
+      renderGrid(filtrados);
+    }
+
+    function renderGrid(productos){
+      const grid = document.getElementById('product-grid');
+
+      document.getElementById('catalogo-contador').textContent = productosCache.length
+        ? `${productos.length} de ${productosCache.length} producto${productosCache.length === 1 ? '' : 's'}`
+        : '';
+
+      if(!productosCache.length){
+        grid.innerHTML = '<div class="empty-state">Todavía no hay productos cargados. Volvé pronto.</div>';
+        return;
+      }
+      if(!productos.length){
+        grid.innerHTML = '<div class="empty-state">No encontramos productos con ese filtro. Probá con otra búsqueda.</div>';
+        return;
+      }
+
+      grid.innerHTML = productos.map(p => {
+        const tallas = normalizarTallas(p);
+        const portada = portadaProducto(p);
+        const precioTag = (p.precioMax != null && p.precioMax > p.precio)
+          ? `Desde ${formatearPrecioARS(p.precio)}`
+          : formatearPrecioARS(p.precio);
+        return `
+        <a class="product-card" href="producto.html?id=${p.id}">
+          <div class="product-photo" style="${portada ? `background-image:url('${portada}')` : ''}">
+            ${!portada ? '<div class="product-photo-empty" style="height:100%;">Sin foto</div>' : ''}
+            <div class="price-tag">${precioTag}</div>
+          </div>
+          <div class="product-info">
+            <div class="product-name">${escapeHtml(p.nombre)}</div>
+            <div class="product-cat">${escapeHtml(p.categoria || 'Calzado')}</div>
+            <div class="product-tallas">
+              ${tallas.map(t => `<span class="talla-chip">${escapeHtml(t.talla)}</span>`).join('')}
+            </div>
+          </div>
+        </a>
+      `;
+      }).join('');
+    }
+
+    let busquedaTimeout = null;
+    document.getElementById('catalogo-search').addEventListener('input', (e) => {
+      clearTimeout(busquedaTimeout);
+      busquedaTimeout = setTimeout(() => {
+        textoBusqueda = e.target.value;
+        aplicarFiltros();
+      }, 150);
+    });
+
+    cargarProductos();
+    initCartDrawerToggle();
+  </script>
+</body>
+</html>
