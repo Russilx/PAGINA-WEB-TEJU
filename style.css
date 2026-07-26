@@ -517,24 +517,27 @@ h1,h2,h3{
 /* ============================================================
    RESPONSIVE
    ============================================================ */
-@media (max-width: 860px){
+@media (max-width: 900px){
   .hero{ grid-template-columns:1fr; padding-top:36px; }
   .hero-art{ order:-1; }
   .producto-grid{ grid-template-columns:1fr; gap:30px; }
   .checkout-grid{ grid-template-columns:1fr; }
+  .checkout-card{ padding:20px; }
 }
-@media (max-width: 560px){
+@media (max-width: 700px){
   .wrap{ padding:0 18px; }
+  .topbar-inner{ padding:14px 18px; }
   .topbar-nav{ display:none; }
   .section-head{ margin-top:40px; }
 
-  /* Ajustes solo para celular: la foto del hero ocupaba casi toda la
-     pantalla antes de mostrar el título, así que se achica y se
-     acomodan los espacios para que se vea más compacto. */
+  /* Ajustes para celular: la foto del hero ocupaba casi toda la
+     pantalla antes de mostrar el título, así que se achica con una
+     altura máxima (además del aspect-ratio) y se acomodan los
+     espacios para que el título entre en la primera pantalla. */
   .hero{ padding-top:20px; gap:22px; }
-  .hero-art{ aspect-ratio:5/4; border-radius:var(--radius-m); }
+  .hero-art{ aspect-ratio:5/4; max-height:280px; border-radius:var(--radius-m); }
   .hero-eyebrow{ margin-bottom:12px; }
-  .hero h1{ margin-bottom:14px; }
+  .hero h1{ font-size:clamp(30px, 8vw, 40px); margin-bottom:14px; }
   .hero p{ margin-bottom:20px; max-width:none; }
   .hero-tag{ left:14px; bottom:14px; padding:8px 12px; font-size:13px; }
 
