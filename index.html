@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teju Shoes — Calzados y zuecos</title>
+<meta name="description" content="Zuecos y calzados de cuero. Elegí tu talle y coordinamos la entrega.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="topbar-inner">
+      <a class="wordmark" href="index.html">Teju <span>Shoes</span></a>
+      <nav class="topbar-nav">
+        <a href="#catalogo">Catálogo</a>
+        <a href="#contacto-footer">Contacto</a>
+      </nav>
+      <button class="cart-btn" id="cart-open-btn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+        Carrito
+        <span class="cart-count" id="cart-count" style="display:none;">0</span>
+      </button>
+    </div>
+  </div>
+
+  <section class="wrap hero">
+    <div>
+      <div class="eyebrow hero-eyebrow">Hecho para caminar</div>
+      <h1>Zuecos y calzados que <em>acompañan</em> cada paso.</h1>
+      <p>Cuero real, horma cómoda y un estilo que no pasa de moda. Elegí tu talle, armá tu pedido y coordinamos el pago y la entrega por WhatsApp.</p>
+      <div class="hero-actions">
+        <a class="btn btn-cork" href="#catalogo">Ver catálogo</a>
+        <a class="btn btn-ghost" href="#contacto-footer">Hablanos</a>
+      </div>
+    </div>
+    <div class="hero-art" id="hero-art" style="background-image:url('hero.jpg');">
+      <div class="hero-tag">Nueva colección</div>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="stitch"></div></div>
+
+  <section class="wrap" id="catalogo">
+    <div class="section-head">
+      <h2>Catálogo</h2>
+      <span class="form-note" id="catalogo-contador"></span>
+    </div>
+    <div class="product-grid" id="product-grid">
+      <div class="loading-row">Cargando productos…</div>
+    </div>
+  </section>
+
+  <!-- CARRITO -->
+  <div class="cart-overlay" id="cart-overlay"></div>
+  <aside class="cart-drawer" id="cart-drawer">
+    <div class="cart-head">
+      <h3>Tu carrito</h3>
+      <button class="cart-close" id="cart-close" type="button">×</button>
+    </div>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-foot">
+      <div class="cart-total-row">
+        <span>Total</span>
+        <span id="cart-total">$0</span>
+      </div>
+      <a class="btn btn-primary btn-block" href="carrito.html">Ir a pagar</a>
+    </div>
+  </aside>
+
+  <!-- FOOTER -->
+  <footer class="site-footer" id="contacto-footer">
+    <div class="wrap">
+      <div class="stitch" style="margin-bottom:26px;"></div>
+      <div class="site-footer-inner">
+        <span class="site-footer-title">Teju Shoes © <span id="footer-year"></span> — Seguinos y consultanos</span>
+        <div class="site-footer-links">
+          <a class="footer-link" id="footer-wsp-link" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.5.1-.3-.1-1.1-.4-2.1-1.3-.8-.7-1.3-1.6-1.5-1.8-.2-.3 0-.4.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.2-.4.1-.2 0-.3 0-.5-.1-.1-.6-1.5-.8-2-.2-.5-.4-.4-.6-.5h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.3 0 1.3 1 2.6 1.1 2.8.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.3.2-.6.2-1.1.2-1.3-.1-.1-.3-.2-.6-.3z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.4C8.6 21.5 10.3 22 12 22c5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3.1.8.8-3-.2-.3C4 14.7 3.6 13.4 3.6 12c0-4.6 3.8-8.4 8.4-8.4s8.4 3.8 8.4 8.4-3.8 8.4-8.4 8.4z"/></svg>
+            WhatsApp
+          </a>
+          <a class="footer-link" id="footer-ig-link" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+            Instagram
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { firebaseConfig, WHATSAPP_PEDIDOS, INSTAGRAM_TEJU } from './firebase-config.js';
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+    import { initializeFirestore, collection, getDocs, query, orderBy }
+      from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+    import { formatearPrecioARS, initCartDrawerToggle } from './carrito.js';
+
+    const app = initializeApp(firebaseConfig);
+    const db = initializeFirestore(app, { experimentalAutoDetectLongPolling: true });
+
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+    const wspTexto = encodeURIComponent('Hola! Tengo una consulta sobre Teju Shoes.');
+    document.getElementById('footer-wsp-link').href = `https://wa.me/${WHATSAPP_PEDIDOS}?text=${wspTexto}`;
+    document.getElementById('footer-ig-link').href = INSTAGRAM_TEJU;
+
+    function escapeHtml(str){
+      return String(str ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    // Compatibilidad: productos viejos guardaban tallas como array de strings con un precio único.
+    function normalizarTallas(p){
+      const tallas = p.tallas || [];
+      if(!tallas.length) return [];
+      if(typeof tallas[0] === 'object' && tallas[0] !== null) return tallas;
+      return tallas.map(t => ({ talla: t, precio: p.precio ?? 0 }));
+    }
+
+    async function cargarProductos(){
+      const grid = document.getElementById('product-grid');
+      try{
+        const q = query(collection(db, "productos"), orderBy("fecha", "desc"));
+        const snapshot = await getDocs(q);
+
+        const productos = [];
+        snapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          if(data.activo === false) return;
+          productos.push({ id: docSnap.id, ...data });
+        });
+
+        document.getElementById('catalogo-contador').textContent = productos.length
+          ? `${productos.length} producto${productos.length === 1 ? '' : 's'}`
+          : '';
+
+        if(!productos.length){
+          grid.innerHTML = '<div class="empty-state">Todavía no hay productos cargados. Volvé pronto.</div>';
+          return;
+        }
+
+        grid.innerHTML = productos.map(p => {
+          const tallas = normalizarTallas(p);
+          const precioTag = (p.precioMax != null && p.precioMax > p.precio)
+            ? `Desde ${formatearPrecioARS(p.precio)}`
+            : formatearPrecioARS(p.precio);
+          return `
+          <a class="product-card" href="producto.html?id=${p.id}">
+            <div class="product-photo" style="${p.imagen ? `background-image:url('${p.imagen}')` : ''}">
+              ${!p.imagen ? '<div class="product-photo-empty" style="height:100%;">Sin foto</div>' : ''}
+              <div class="price-tag">${precioTag}</div>
+            </div>
+            <div class="product-info">
+              <div class="product-name">${escapeHtml(p.nombre)}</div>
+              <div class="product-cat">${escapeHtml(p.categoria || 'Calzado')}</div>
+              <div class="product-tallas">
+                ${tallas.map(t => `<span class="talla-chip">${escapeHtml(t.talla)}</span>`).join('')}
+              </div>
+            </div>
+          </a>
+        `;
+        }).join('');
+      }catch(err){
+        console.error('Error al cargar productos:', err);
+        grid.innerHTML = '<div class="empty-state">No se pudieron cargar los productos. Revisá la configuración de Firebase.</div>';
+      }
+    }
+
+    cargarProductos();
+    initCartDrawerToggle();
+  </script>
+</body>
+</html>
